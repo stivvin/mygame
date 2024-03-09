@@ -2426,6 +2426,10 @@ void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
         break;
     case MON_DATA_SPECIES_OR_EGG:
         break;
+    case MON_DATA_NATURE: // Calculate stats after settings
+        SetBoxMonData(&mon->box, field, data);
+        CalculateMonStats(mon);
+        break;
     default:
         SetBoxMonData(&mon->box, field, data);
         break;
@@ -3829,6 +3833,7 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 mode, u16 evolutionItem, s
                     targetSpecies = evolutions[i].targetSpecies;
                 break;
             case EVO_FRIENDSHIP_DAY:
+                UpdateTimeOfDay();
                 if (GetTimeOfDay() != TIME_NIGHT && friendship >= FRIENDSHIP_EVO_THRESHOLD)
                     targetSpecies = evolutions[i].targetSpecies;
                 break;
@@ -3837,6 +3842,7 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 mode, u16 evolutionItem, s
                     targetSpecies = evolutions[i].targetSpecies;
                 break;
             case EVO_FRIENDSHIP_NIGHT:
+                UpdateTimeOfDay();
                 if (GetTimeOfDay() == TIME_NIGHT && friendship >= FRIENDSHIP_EVO_THRESHOLD)
                     targetSpecies = evolutions[i].targetSpecies;
                 break;

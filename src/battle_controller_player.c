@@ -11,6 +11,7 @@
 #include "battle_z_move.h"
 #include "bg.h"
 #include "data.h"
+#include "event_object_movement.h"
 #include "item.h"
 #include "item_menu.h"
 #include "link.h"
@@ -2202,8 +2203,8 @@ static void PlayerHandleDMA3Transfer(u32 battler)
 
 static void PlayerHandlePlayBGM(u32 battler)
 {
-    PlayBGM(gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8));
-    PlayerBufferExecCompleted(battler);
+    PlayBGM(gBattleBufferA[gActiveBattler][1] | (gBattleBufferA[gActiveBattler][2] << 8));
+    PlayerBufferExecCompleted();
 }
 
 static void PlayerHandleTwoReturnValues(u32 battler)
@@ -2212,25 +2213,18 @@ static void PlayerHandleTwoReturnValues(u32 battler)
     PlayerBufferExecCompleted(battler);
 }
 
-static void PlayerHandleChosenMonReturnValue(u32 battler)
-{
-    BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, 0, NULL);
-    PlayerBufferExecCompleted(battler);
-}
+static void PlayerHandleOneReturnValue_Duplicate(u32 battler)
+
+
 
 static void PlayerHandleOneReturnValue(u32 battler)
 {
-    BtlController_EmitOneReturnValue(battler, BUFFER_B, 0);
-    PlayerBufferExecCompleted(battler);
+    static void PlayerHandleOneReturnValue_Duplicate(u32 battler)
+
 }
 
 static void PlayerHandleOneReturnValue_Duplicate(u32 battler)
-{
-    BtlController_EmitOneReturnValue_Duplicate(battler, BUFFER_B, 0);
-    PlayerBufferExecCompleted(battler);
-}
 
-static void PlayerHandleIntroTrainerBallThrow(u32 battler)
 {
     const u32 *trainerPal = gTrainerBackPicPaletteTable[gSaveBlock2Ptr->playerGender].data;
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
